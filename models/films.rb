@@ -6,14 +6,14 @@ class Film
   attr_accessor :title, :price
 
   def initialize(options)
-    @id = options['id'].to_i if options ['id']
+    @id = options['id'].to_i if options['id']
     @title = options['title']
-    @price = options['price']
+    @price = options['price'].to_i
   end
 
   def save()
     sql = "INSERT INTO films (title, price) VALUES ($1,$2) RETURNING id"
-    values = ['title','price']
+    values = [@title, @price]
     film_result = SqlRunner.run(sql, values).first
     @id = film_result['id'].to_i
   end
@@ -23,7 +23,7 @@ class Film
     FROM customers
     INNER JOIN tickets
     ON tickets.customer_id = customers.id
-    WHERE film_id = $1"
+    WHERE film_id = $1 ORDER BY (name, funds)"
     values = [@id]
     customer_data = SqlRunner.run(sql, values)
     result = customer_data.map {|customer| Customer.new(customer)}
