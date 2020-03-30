@@ -26,10 +26,14 @@ film1.save()
 
 ticket1 = Ticket.new({'customer_id' => customer1.id, 'film_id' => film1.id})
 ticket1.save()
-ticket1.cust_buys_ticket()
-#ticket1.get_cust_funds()
-#ticket1.get_film_price()
-#ticket1.customer()
+#ticket1.cust_buys_ticket() #Prints out 20 which is the correct number and database is updating but Ruby object is somehow not updating
+customer1.cust_buys_ticket(ticket1)
+
+p "Customer buys a ticket and his funds are now: " + customer1.funds().to_s #Output code
+
+p "The number of "ticket1.tickets_bought_by_cust()
+
+
 
 ticket2 = Ticket.new({'customer_id' => customer2.id, 'film_id' => film1.id})
 ticket2.save()

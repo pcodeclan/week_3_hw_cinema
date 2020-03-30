@@ -12,7 +12,7 @@ class Ticket
 
     @cust_funds = options['cust_funds'].to_i
     @film_price = options['film_price'].to_i
-    @cust_fund_total = options['cust_fund_total'].to_i
+    @cust_funds_total = options['cust_fund_total'].to_i
   end
 
   def save()
@@ -27,6 +27,16 @@ class Ticket
     values = [@customer_id]
     customer = SqlRunner.run(sql, values).first
     return Customer.new(customer)
+  end
+
+  def tickets_bought_by_cust()
+    sql = "SELECT COUNT id FROM tickets
+    INNER JOIN customer
+    ON customer.id = tickets.customer_id
+    WHERE customer.id = $1"
+    values = [@id]
+    ticket = SqlRunner.run(sql, values).first
+    return Ticket.new(ticket)
   end
 
   def film()
@@ -64,13 +74,19 @@ class Ticket
     film = SqlRunner.run(sql, values).first
     @film_price = Film.new(film).price #Method for films is price
   end
+  # What you needed to do here is to have the customer buys ticket method inside the customer class.
+  # This is because it is a mehtod that applies to a customer than than a ticket. By placing
+  # the methid in the customer class you are able to update the funds inside the instance of
+  # that customer when they buy a ticket.
 
-  def cust_buys_ticket()
-    @cust_fund_total = get_cust_funds()-get_film_price() #Calculation works
-    sql = "UPDATE customers
-          SET funds = $2 WHERE id = $1"
-    values = [@cust_funds_total, @customer_id]
-    SqlRunner.run(sql, values)
-  end
+  # def cust_buys_ticket()
+  #   @cust_funds_total = get_cust_funds()-get_film_price() #Calculation works
+  #   sql = "UPDATE customers
+  #         SET funds = $1 WHERE id = $2"
+  #   values = [@cust_funds_total, @customer_id]
+  #   SqlRunner.run(sql, values)
+  #   p @cust_funds_total #Test code
+  #   p @customer_id #Test code
+  # end
 
 end

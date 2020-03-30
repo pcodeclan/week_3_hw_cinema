@@ -30,6 +30,16 @@ class Customer
     p result
   end
 
+  def cust_buys_ticket(ticket)
+    @funds -= ticket.get_film_price #Calculation works - database updating just not object in Ruby
+    sql = "UPDATE customers
+          SET funds = $1 WHERE id = $2"
+    values = [@funds, @id]
+    SqlRunner.run(sql, values)
+    p @funds #Test code
+    p @id #Test code
+  end
+
   def Customer.all()
     sql = "SELECT * FROM customers"
     customer_hash = SqlRunner.run(sql)
